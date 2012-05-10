@@ -1,0 +1,319 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<title></title>
+<script type="text/javascript" src="js/jquery-1.7.2.min.js" ></script>
+
+<link href="css/style.css" type="text/css" rel="stylesheet" media="" />
+<link href="css/paint.css" type="text/css" rel="stylesheet" media="" />
+
+
+<style>
+					/* Resets */
+					
+					
+					/* Fonts */					
+
+
+					/* Layout */
+.lane{
+	width:1000px;
+	margin:auto;
+}
+.masthead{
+	
+}
+.chest{
+	
+}
+.footer{
+	
+}
+					
+					/* Basics */
+					
+					
+					/* Line Level Styling */					
+
+</style>
+
+<script type="text/javascript">
+
+		
+
+		
+$(document).ready(function() {
+
+//Variables
+//=========
+		
+		if( !(localStorage.getItem('playerScoreL') === null) ){
+			//console.log('previous scores found');
+			var humanScore = localStorage.getItem('playerScoreL');
+			var cpuScore = localStorage.getItem('cpuScoreL');
+			$('#playerScore').text(humanScore);
+			$('#cpuScore').text(cpuScore);
+			
+			//TODO call pop asking to continue game or restart
+		}
+		else{
+			//console.log('no previous scores found');
+			var humanScore = 0;
+			var cpuScore = 0;
+			localStorage.setItem('playerScoreL', '0');
+			localStorage.setItem('cpuScoreL', '0');
+		}
+		
+		
+//Objects
+//-------
+		
+			//Player class
+				function player(set) {
+					var score = set;
+					var hand = 'default';
+					
+					function shake(chosen){
+						if (chosen != null) {
+							hand = chosen;
+							return chosen;
+						}
+						else {
+							x =	Math.floor( Math.random() * 3 );
+							switch(x){
+								case 0: x = 'paper'; break;
+								
+								case 1: x = 'scissors'; break;
+								
+								case 2: x = 'rock'; break;
+							}
+							hand = x;
+							return x;
+						}
+					}
+					
+					function getHand(){
+						return hand;
+					}
+					function setHand(x){
+						hand = x;
+					}	
+					
+					return{
+						shake: shake,
+						score: score,
+						hand: getHand
+					}
+						
+				}
+				
+		
+		
+		
+//Functions
+//---------
+// To add:
+// add alert confirmation on reset
+// add ro sham bo announcement
+
+// Done:
+// add 1up animation on win
+// add win/loss announcement
+// insert fonts
+
+
+			function plusAnimation(winner){
+				$(winner + ' .oneUp').css({'visibility':'visible', 'opacity':'1'}).animate({ opacity: 0, top: '-=30' }, 500, function() {    
+					$('.oneUp').css({'top':'2px' });
+				  });
+				
+			}
+
+
+		
+			function addScore(winner){
+				if( winner == 'player'){
+					humanPlayer.score++;
+					localStorage.setItem('playerScoreL',humanPlayer.score);
+					$('#playerScore').text(humanPlayer.score);
+				}
+				else if( winner == 'cpu'){
+					cpuPlayer.score++;
+					localStorage.setItem('cpuScoreL',cpuPlayer.score);
+					$('#cpuScore').text(cpuPlayer.score);
+				}
+			}
+		
+			function imageChange(id, image){
+				$(id).fadeOut(50).fadeIn(50);
+				
+				
+				switch(id){
+					case '#playerSpan':
+						if(image == 'rock'){
+							$(id).css('backgroundPosition', '-24px 0px');
+						}
+						else if(image == 'paper'){
+							$(id).css('backgroundPosition', '-12px -136px');
+						}
+						else{
+							$(id).css('backgroundPosition', '-24px -278px');
+						}
+					break;
+					
+					case '#cpuSpan':
+						if(image == 'rock'){
+							$(id).css('backgroundPosition', '-171px 0px');
+						}
+						else if(image == 'paper'){
+							$(id).css('backgroundPosition', '-187px -136px');
+						}
+						else{
+							$(id).css('backgroundPosition', '-178px -278px');
+						}
+					break;
+				}
+			}
+			
+			
+			function checkWinner(){
+				var playerResult = humanPlayer.hand();
+				var cpuResult = cpuPlayer.hand();
+				
+				if( playerResult == cpuResult ){
+					$('#announce').fadeOut(function(){
+						$('#announce').fadeIn().text('Draw! Your both losers!');
+					});
+				}
+				
+				else if( playerResult == 'paper' && cpuResult == 'scissors' || playerResult == 'rock' && cpuResult == 'paper' || playerResult == 'scissors' && cpuResult == 'rock' ){
+					addScore('cpu');
+					plusAnimation('#cpuBarBG');
+					$('#announce').fadeOut().fadeIn().text('Computer wins!');
+				}
+				else{
+					addScore('player');
+					plusAnimation('#playerBarBG');
+					$('#announce').fadeOut().fadeIn().text('Player Wins!');
+				}
+				
+			}
+			
+			function symbolSpin(chosen){
+				unbindPlayButtons();
+				setTimeout(bindPlayButtons, 1000);
+				//update output Ro!
+				
+				setTimeout(imageChange, 300, '#cpuSpan', cpuPlayer.shake() );
+				setTimeout(imageChange, 300, '#playerSpan', humanPlayer.shake() );
+				//update output Sham!
+				
+				setTimeout(imageChange, 600, '#cpuSpan', cpuPlayer.shake() );
+				setTimeout(imageChange, 600, '#playerSpan', humanPlayer.shake() );
+				//update output Bo!
+				
+				setTimeout(imageChange, 900, '#cpuSpan', cpuPlayer.shake() );
+				setTimeout(imageChange, 900, '#playerSpan', humanPlayer.shake(chosen));	
+				
+				setTimeout(checkWinner, 1100);
+			}
+			
+
+			
+
+			function throwDown(selected){
+				symbolSpin(selected);
+			}
+			
+			function resetGame(){
+					localStorage.setItem('playerScoreL', '0' );
+					localStorage.setItem('cpuScoreL', '0' );
+					$('#playerScore').text(0);
+					$('#cpuScore').text(0);
+			}
+			
+			
+// Binding functions
+// -----------------
+			function bindPlayButtons(){
+				$('#controls button').click(function(){
+					throwDown(this.id);
+				})
+			}
+			function unbindPlayButtons(){
+				$('#controls button').unbind();
+			}
+			//debugger;
+			
+			//console.debug();
+
+//Set bindings
+//============
+			bindPlayButtons();
+			$('#resetGame').click( resetGame );
+
+//Init objects
+//============			
+			var cpuPlayer = new player(cpuScore);
+			var humanPlayer = new player(humanScore);
+			
+			
+});
+</script>
+
+</head>
+
+<body>
+<div class="lane">
+	<div class="masthead"><img width="100" height="100" src="img/logo.png"/>
+    	<div class="primaryNav">
+    	   	<button id="resetGame" class="awesome red medium">Reset Game</button>
+    	   	<br/><br/>
+        </div>
+    </div>
+    <div class="chest">
+    
+		<div class="scoreInfo">
+				<div id="playerBarBG" class="scoreBar awesome notButton snow large">
+					You <span id="playerScore">0</span>
+					<div class="oneUp"><div></div><div></div></div>
+				</div>
+				<div id="controls">
+					<button class="awesome orange medium" id="paper">Paper</button>
+					<button class="awesome orange medium" id="scissors">Scissors</button>
+					<button class="awesome orange medium" id="rock">Rock</button>
+				</div>
+
+		</div>
+		
+		<div class="scoreInfo">
+				<div id="cpuBarBG" class="scoreBar awesome notButton charcoal large">
+					Cpu <span id="cpuScore">0</span>
+					<div class="oneUp"><div></div><div></div></div>
+				</div>
+		</div>
+				
+
+				
+				
+
+
+			<div id="playerResult">
+			
+				<div class="playerHand">
+					<div id="playerSpan"></div>
+				</div>
+				<div class="playerHand">
+					<div id="cpuSpan"></div>
+				</div>
+				
+			</div>
+    
+    <div class="clear">&nbsp;</div>
+    <div id="announce">&nbsp;</div>
+    <p>&nbsp;</p>
+    </div>
+	<div class="footer"><!--Made possible by, Zurb awesome buttons, jQuery--></div>
+</div>
+</body>
+</html>

@@ -1,0 +1,126 @@
+@charset "utf-8";
+/* CSS Document */
+
+/* Fonts */
+
+@font-face {
+    font-family: 'KnuckleDownRegular';
+    src: url('knuckled-webfont.eot');
+    src: url('knuckled-webfont.eot?#iefix') format('embedded-opentype'),
+         url('knuckled-webfont.woff') format('woff'),
+         url('knuckled-webfont.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+}
+
+html{
+	font-family: arial, sans-serif;
+}
+
+
+.lane{
+	max-width: 600px;
+	margin: auto;
+}
+
+.scoreInfo{
+	width:50%;
+	float:left;
+}
+
+
+
+
+.scoreBar {
+	display: inline-block;
+	width: 85%;
+	margin:auto;
+	position: relative;
+}
+
+
+
+
+#controls{
+	margin-top: 1em;
+	margin-bottom: 2em;
+}
+
+
+#playerScore, #cpuScore{
+	float:right;
+}
+
+#playerResult{
+	clear: both;
+}
+
+#playerResult {
+	min-height: 150px;
+}
+.playerHand{
+	width: 49%;
+	display: inline-block;
+}
+
+.playerHand div{
+	margin: auto;
+	height: 120px;
+	width: 120px;
+	border: 3px dashed #999999;
+	border-radius: 0.8em;
+	display: block;
+	
+	background-image:url('../img/rsp_rules_clean.gif');
+}
+
+#playerSpan{
+	
+	/*rock */
+	background-position:-24px 0px;
+}
+
+#cpuSpan{
+	/*rock */
+	background-position:-171px 0px;
+}
+
+#announce{
+	text-align: center;
+	font-family: 'KnuckleDownRegular';
+	font-size: 2em;
+	display: none;
+}
+
+.oneUp{
+	width: 20px;
+	height: 20px;
+	position: absolute;
+	top: 2px;
+	right: 8px;
+	visibility: hidden;
+}
+.oneUP div{
+	position: absolute;
+	background-color: #ffc600;
+}
+
+.oneUP div:first-child{
+	width: 5px;
+	height: 100%;
+	left: 40%;
+}
+.oneUp div:last-child{
+	height: 5px;
+	width: 100%;
+	top: 40%;
+}
+
+.clear{
+	clear: both;
+}
+
+
+
+
+
